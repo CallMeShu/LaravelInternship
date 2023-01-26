@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class ClientControl extends Controller
@@ -14,7 +14,8 @@ class ClientControl extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::all();
+        return view('clients.index', compact('clients'));
     }
 
     /**
@@ -24,7 +25,7 @@ class ClientControl extends Controller
      */
     public function create()
     {
-        //
+        return view('clients.create');
     }
 
     /**
@@ -35,7 +36,9 @@ class ClientControl extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $client = Client::create($request->validated());
+
+        return redirect()->route('clients.index')->with('success', 'Client created successfully');
     }
 
     /**
@@ -46,7 +49,7 @@ class ClientControl extends Controller
      */
     public function show($id)
     {
-        //
+        return view('clients.show', compact('client'));
     }
 
     /**
@@ -57,7 +60,8 @@ class ClientControl extends Controller
      */
     public function edit($id)
     {
-        //
+        $client = Client::findorfail($id);
+        return view('clients.edit', compact('client'));
     }
 
     /**
@@ -69,9 +73,10 @@ class ClientControl extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->update($request->validated());
+        return redirect()->route('clients.index')->with('success', 'Client updated successfully');
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -80,6 +85,8 @@ class ClientControl extends Controller
      */
     public function destroy($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->delete();
+        return redirect()->route('clients.index')->with('success', 'Client deleted successfully');
     }
 }
